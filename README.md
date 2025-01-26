@@ -1,179 +1,76 @@
-print("Running")
-import pandas as pd
-import pandas as pd
+# Project: PCOS Data Analysis
 
-# Example: Creating a DataFrame
-data = {'Column1': [1, 2, 3], 'Column2': [4, 5, 6]}
-df = pd.DataFrame(data)
+## Overview
+This project is a comprehensive analysis and preprocessing of a dataset related to PCOS (Polycystic Ovary Syndrome). The analysis includes data cleaning, transformation, exploration, and visualization. The final processed data is saved for future use, and a variety of Python techniques are demonstrated throughout the notebook.
 
-df =pd.read_csv("pcos_dataset.csv")
- # Data Cleaning
-info how many column and row
-df.info()
-### We want to read all data
-df = pd.DataFrame(df)
-df.head()
-### Check column to avoid error
-column = list(df.columns)
-column
-### drop column that isnot needed
-df.drop(columns='Country', inplace=True)  
+## Table of Contents
+1. [Features](#features)
+2. [Setup Instructions](#setup-instructions)
+3. [Key Functionalities](#key-functionalities)
+4. [Requirements](#requirements)
+5. [Outputs](#outputs)
+6. [Acknowledgments](#acknowledgments)
 
-### check n/a values
-df.isna().sum()
-### dropping n/a values and check again
-df  =df.dropna(subset=["Country"])
-df.isna().sum()
-### Check duplicate
-df.duplicated('Country').sum()
-### Drop duplicate
-df.drop_duplicates(subset='Country',inplace=True)
-df.duplicated('Country').sum()
-### Again duplicate
-df.duplicated('Country').sum()
-### Description
-df.describe()
-### If you want to seprate thing by commas
-df['BMI'].str.split(',',expand=True)
-### Data agregation
-# Applying aggregation across all the columns 
+## Features
+- **Data Cleaning:**
+  - Inspect dataset properties using `info` and `head`.
+  - Handle missing values using `dropna` and `fillna`.
+  - Remove duplicates to ensure data quality.
+  
+- **Data Transformation:**
+  - Rename columns for better readability using `rename`.
+  - Convert categorical data into numerical formats using `get_dummies` and `factorize`.
+  - Perform aggregation and group-wise operations using `groupby` and `pivot_table`.
 
-numeric_df = df.select_dtypes(include=['number'])
-numeric_df.aggregate(['sum', 'min'])
-## We are going to find aggregation for these columns 
-This function lets you perform several calculations at once, like getting the total, average, and maximum of a column in one go.
+- **Data Visualization:**
+  - Generate bar, pie, histogram, and line plots using `matplotlib` and `seaborn`.
+  - Visualize data distributions and trends to extract insights.
 
-df.aggregate({"Age": ['sum', 'min'], 
-              "Undiagnosed PCOS Likelihood": ['max', 'min'], 
-             }) 
-## Common Aggregations with groupby():
-Think of it like sorting your data into groups (e.g., by city) and then calculating things like totals or averages for each group.
-df.groupby('Ethnicity').agg({'Age': ['sum', 'mean', 'max', 'min']})
+- **Export Data:**
+  - Save the processed data to Excel format for future use.
 
-## Used to summarize and aggregate data with multiple dimensions.
-It’s like an Excel pivot table. You can reorganize your data to show summaries by different Ethnicity and calculations.
-df.pivot_table(values='Age', index='Ethnicity', aggfunc='sum')
-## apply() – Custom Aggregation Function
-Allows applying custom functions to each group.
-Lets you write your own function to apply on each row or group of data.
-df.groupby('Ethnicity')['Age'].apply(lambda x: x.max() - x.min())
+## Setup Instructions
+To run this notebook, follow these steps:
 
-## sum() – Add up values
-Adds up all the numbers in a column.
-df['Age'].sum()
+1. Install the required Python libraries:
+   ```bash
+   pip install pandas matplotlib seaborn openpyxl
+   ```
 
-## mean() – Calculating Average
-Finds the average of a numerical column.
-df['Age'].mean()
-## count() – Counting Rows
-Counts the number of non-null values.
-df['Age'].count()
- ## median() – Median Value
-Calculates the median (middle value) of a column.
-df['Age'].median()
-##  std() – Standard Deviation
-Computes the standard deviation of a numerical column.
-df['Age'].std()
-## nunique() – Counting Unique Values
-Finds the number of unique values in a column.
-df['Ethnicity'].nunique()
-## data preprocessing
-## Handling Missing Values
-Yes() / No() – Check for missing values
-df.isnull().sum() 
-### For non missing values
-df.isnull().sum() 
-dropna() – Remove missing values
-Removes rows or columns with missing values.
-Remove rows with any missing value
-df.dropna()
-### Remove columns with missing values
-df.dropna(axis=1)
-fillna() – Fill missing values
-Fills missing values with a specified value or strategy.
-df.fillna(0)  # Replace missing values with 0
+2. Ensure the dataset `pcos_dataset.csv` is available in the working directory.
 
-## Handling Duplicates
-duplicated() – Identify duplicate rows
-Checks for duplicate rows in the DataFrame.
-df.duplicated().sum()  # Count duplicate rows
-df.drop_duplicates()  # Remove duplicate rows
+3. Open the notebook (`pcos.ipynb`) using Jupyter Notebook or JupyterLab.
 
-## Data Transformation
-astype() – Convert data types
-Converts the data type of columns to a specific type.
-# Adding the 'Gender' column with sample data
-gender_list = ['Female', 'Male', 'Male', 'Female', 'Female', 'Male', 'Female', 'Male', 'Female', 'Male'] * (len(df) // 10 + 1)
-df['Gender'] = gender_list[:len(df)]  # Adjust the length to match the DataFrame
+## Key Functionalities
+- **Data Cleaning:**
+  - Drop unnecessary columns (e.g., `Country`).
+  - Check for and handle missing or duplicate values.
 
-# Convert categorical values to numeric
-df['Gender'] = df['Gender'].map({'Male': 1, 'Female': 0})
-## rename() – Rename columns
-Renames column names for better understanding.
-df.rename(columns={'Name': 'name'}, inplace=True)
+- **Data Exploration:**
+  - Summarize data using functions like `describe`, `sum`, `mean`, and `std`.
 
-df.rename(columns={'Customer Name': 'name'}, inplace=True)
+- **Data Aggregation:**
+  - Calculate key statistics (e.g., sum, mean, max) grouped by categories like `Ethnicity`.
 
-## Data Encoding
-get_dummies() – One-hot encoding
-Converts categorical data into dummy variables.
-# Adding a 'Country' column with sample data
-df['Country'] = ['USA', 'Canada', 'Mexico']
+- **Visualizations:**
+  - Create bar charts, pie charts, and histograms for categorical and numerical data.
 
-# Applying one-hot encoding to the 'Country' column
-pd.get_dummies(df, columns=['Country'])
- ## factorize() – Convert categorical values to numeric codes
-Encodes labels into numeric values.
-# Adding a 'Category' column with sample data
-df['Category'] = ['A', 'B', 'C']
+- **Data Export:**
+  - Save cleaned and transformed data to `newdata.xlsx` for further use.
 
-# Factorizing the 'Category' column
-df['Category'], unique_values = pd.factorize(df['Category'])
+## Requirements
+- Python 3.11.3
+- Libraries:
+  - pandas
+  - matplotlib
+  - seaborn
+  - openpyxl
 
-## converting data type
-df['Sales'] = df['Sales'].astype(float)
-print(df.dtypes)
-## Data plotting
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-df.groupby('Country')['Sales'].sum().plot(kind='bar', title='Total  Country')
-plt.ylabel('Total country')
-plt.show()
-df['Category'].plot(kind='hist', bins=5, title='Country Distribution')
-plt.xlabel('country')
-plt.show()
+## Outputs
+- **Processed Dataset:**
+  - Cleaned and transformed data saved as `newdata.xlsx`.
+- **Visualizations:**
+  - Plots showcasing trends and distributions in the dataset.
 
-df['Category'].value_counts().plot(kind='pie', autopct='%1.1f%%', title='Country Category Distribution')
-plt.ylabel('')  # Remove the default y-label
-plt.show()
-
-# Adding a 'City' column with sample data
-df['City'] = ['New York', 'Toronto', 'Mexico City']
-
-# Plotting the 'City' column
-df['City'].value_counts().plot(kind="bar")
-plt.title('City Distribution')
-plt.xlabel('City')
-plt.ylabel('Count')
-plt.show()
-df['City'].value_counts().plot(kind="area")
-df['City'].value_counts().plot(kind="hist")
-# Convert categorical 'City' column to numerical data
-city_numeric = df['City'].factorize()[0]
-
-# Plot KDE for the numerical data
-sns.kdeplot(city_numeric)
-plt.title('City Distribution (KDE)')
-plt.xlabel('City')
-plt.show()
-df['Country'].value_counts().plot(kind="box")
-df['City'].value_counts().plot(kind="area")
-## saving data
-# Ensure the file is not open in any other program and you have the necessary permissions
-try:
-	df = pd.read_csv("data.csv")
-	df
-	df.to_excel("newdata.xlsx", sheet_name="newsheet")
-except PermissionError as e:
-	print(f"PermissionError: {e}")
+## Acknowledgments
+This project was developed as part of an effort to analyze PCOS data using Python. Special thanks to the Python community for providing excellent tools and resources for data analysis.
